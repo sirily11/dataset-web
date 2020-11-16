@@ -16,16 +16,18 @@ class _SinaPageState extends State<SinaPage> {
   void initState() {
     SinaKeywordProvider sinaKeywordProvider =
         Provider.of(context, listen: false);
-
-    sinaKeywordProvider.fetchKeywords().catchError((err) {
-      showDialog(
-        context: context,
-        builder: (c) => AlertPopUpDialog(
-          title: "Cannot fetch keywords",
-          content: "$err",
-        ),
-      );
+    Future.delayed(Duration(milliseconds: 200)).then((value) {
+      sinaKeywordProvider.fetchKeywords().catchError((err) {
+        showDialog(
+          context: context,
+          builder: (c) => AlertPopUpDialog(
+            title: "Cannot fetch keywords",
+            content: "$err",
+          ),
+        );
+      });
     });
+
     super.initState();
   }
 

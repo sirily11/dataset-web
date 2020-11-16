@@ -1,5 +1,6 @@
 import 'package:dataset_web/model/SinaKeywordModel.dart';
 import 'package:dataset_web/pages/dialog/AlertDialog.dart';
+import 'package:dataset_web/pages/sina/components/TextSearchField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -57,8 +58,21 @@ class KeywordDisplay extends StatelessWidget {
                 )
               ],
             ),
+            TextSearchField(
+              onSearch: (keyword) async {
+                await sinaKeywordProvider.search(keyword);
+              },
+              onClear: () async {
+                await sinaKeywordProvider.fetchKeywords();
+              },
+            ),
             if (sinaKeywordProvider.isLoadingKeywords)
               CupertinoActivityIndicator(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Number of results: ${sinaKeywordProvider.count}"),
+            ),
+            Divider(),
             Expanded(
               child: Scrollbar(
                 child: EasyRefresh(

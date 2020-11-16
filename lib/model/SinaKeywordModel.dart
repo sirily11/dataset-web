@@ -12,6 +12,7 @@ class SinaKeywordProvider with ChangeNotifier {
   bool isLoadingDetail = false;
   final ScrollController scrollController = ScrollController();
   final dio = Dio();
+  num count = 0;
   DateTimeRange _selectedDate;
 
   SinaKeywordProvider() {}
@@ -34,6 +35,27 @@ class SinaKeywordProvider with ChangeNotifier {
 
   Keyword get selectedKeyword => _selectedKeyword;
 
+  Future<void> search(String keyword) async {
+    isLoadingKeywords = true;
+    notifyListeners();
+    try {
+      String url = "$kBaseURL$kSinaURL/?search=$keyword";
+
+      var response = await dio.get(url);
+      nextURL = response.data['next'];
+      count = response.data['count'];
+      keywords = (response.data['results'] as List)
+          .map((e) => Keyword.fromJson(e))
+          .toList();
+      isLoadingKeywords = false;
+      notifyListeners();
+    } catch (err) {
+      isLoadingKeywords = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
   Future<void> fetchKeywords({DateTimeRange dateTimeRange}) async {
     isLoadingKeywords = true;
     notifyListeners();
@@ -46,6 +68,7 @@ class SinaKeywordProvider with ChangeNotifier {
 
       var response = await dio.get(url);
       nextURL = response.data['next'];
+      count = response.data['count'];
       keywords = (response.data['results'] as List)
           .map((e) => Keyword.fromJson(e))
           .toList();
