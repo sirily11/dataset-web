@@ -37,6 +37,7 @@ class SinaKeywordProvider with ChangeNotifier {
 
   Future<void> search(String keyword) async {
     isLoadingKeywords = true;
+    nextURL = null;
     notifyListeners();
     try {
       String url = "$kBaseURL$kSinaURL/?search=$keyword";
@@ -58,6 +59,7 @@ class SinaKeywordProvider with ChangeNotifier {
 
   Future<void> fetchKeywords({DateTimeRange dateTimeRange}) async {
     isLoadingKeywords = true;
+    nextURL = null;
     notifyListeners();
     try {
       String url = "$kBaseURL$kSinaURL/";
