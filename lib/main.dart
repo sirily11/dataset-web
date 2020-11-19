@@ -1,5 +1,8 @@
 import 'package:dataset_web/model/HomeProvider.dart';
+import 'package:dataset_web/model/ShanghaiDisneyModel.dart';
 import 'package:dataset_web/model/SinaKeywordModel.dart';
+import 'package:dataset_web/pages/disney_shanghai/DisneyShanghaiPage.dart';
+import 'package:dataset_web/pages/disney_shanghai/components/DisneyShanghaiCard.dart';
 import 'package:dataset_web/pages/home/HomePage.dart';
 import 'package:dataset_web/pages/sina/SinaPage.dart';
 import 'package:flutter/material.dart';
@@ -22,36 +25,26 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (c) => SinaKeywordProvider(),
+          create: (c) => SinaKeywordModel(),
         ),
         ChangeNotifierProvider(
           create: (c) => HomeProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (c) => ShanghaiDisneyModel(),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case '/':
-              return PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    HomePage(),
-              );
-            case "/sina-hot-keyword":
-              return PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    SinaPage(),
-              );
-          }
+        routes: {
+          "/": (c) => HomePage(),
+          "/disney-shanghai": (c) => DisneyShanghaiPage(),
+          "/sina-hot-keyword": (c) => SinaPage()
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        // routes: {
-        //   "/": (c) => HomePage(),
-        //   '/sina-hot-keyword': (c) => SinaPage(),
-        // },
       ),
     );
   }

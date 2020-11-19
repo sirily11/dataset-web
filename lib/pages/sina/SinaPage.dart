@@ -14,7 +14,7 @@ class SinaPage extends StatefulWidget {
 class _SinaPageState extends State<SinaPage> {
   @override
   void initState() {
-    SinaKeywordProvider sinaKeywordProvider =
+    SinaKeywordModel sinaKeywordProvider =
         Provider.of(context, listen: false);
     Future.delayed(Duration(milliseconds: 200)).then((value) {
       sinaKeywordProvider.fetchKeywords().catchError((err) {
@@ -33,7 +33,7 @@ class _SinaPageState extends State<SinaPage> {
 
   @override
   Widget build(BuildContext context) {
-    SinaKeywordProvider sinaKeywordProvider = Provider.of(context);
+    SinaKeywordModel sinaKeywordProvider = Provider.of(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 768) {

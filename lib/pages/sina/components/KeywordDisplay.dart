@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class KeywordDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SinaKeywordProvider sinaKeywordProvider = Provider.of(context);
+    SinaKeywordModel sinaKeywordProvider = Provider.of(context);
     String toDateString(DateTime date) {
       if (date == null) {
         return "";

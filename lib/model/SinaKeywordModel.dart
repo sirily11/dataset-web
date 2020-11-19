@@ -3,7 +3,7 @@ import 'package:dataset_web/utils/urls.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class SinaKeywordProvider with ChangeNotifier {
+class SinaKeywordModel with ChangeNotifier {
   String nextURL;
   List<Keyword> keywords = [];
   Keyword _selectedKeyword;
@@ -15,7 +15,7 @@ class SinaKeywordProvider with ChangeNotifier {
   num count = 0;
   DateTimeRange _selectedDate;
 
-  SinaKeywordProvider() {}
+  SinaKeywordModel() {}
 
   set selectedDate(DateTimeRange dateTime) {
     _selectedDate = dateTime;

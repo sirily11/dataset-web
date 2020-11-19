@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class KeywordDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SinaKeywordProvider sinaKeywordProvider = Provider.of(context);
+    SinaKeywordModel sinaKeywordProvider = Provider.of(context);
     return Expanded(
       flex: 5,
       child: Scrollbar(
@@ -28,7 +28,7 @@ class KeywordDetail extends StatelessWidget {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text(post.content),
+                      child: SelectableText(post.content),
                     ),
                   );
                 },
@@ -41,7 +41,7 @@ class KeywordDetail extends StatelessWidget {
   }
 
   Widget buildTitle(BuildContext context) {
-    SinaKeywordProvider sinaKeywordProvider = Provider.of(context);
+    SinaKeywordModel sinaKeywordProvider = Provider.of(context);
     var detail = sinaKeywordProvider.keywordDetail;
     return Container(
       width: MediaQuery.of(context).size.width,

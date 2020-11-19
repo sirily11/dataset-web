@@ -8,7 +8,7 @@ class DatasetSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeProvider homeProvider = Provider.of(context);
     return Expanded(
-      flex: 1,
+      flex: 2,
       child: Card(
         elevation: 0,
         child: ListView.builder(
