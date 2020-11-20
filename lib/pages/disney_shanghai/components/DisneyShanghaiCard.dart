@@ -1,5 +1,6 @@
 import 'package:bezier_chart/bezier_chart.dart';
 import 'package:dataset_web/objects/facility.dart';
+import 'package:dataset_web/pages/disney_shanghai/pages/detail/DetailPage.dart';
 import 'package:flutter/material.dart';
 
 class DisneyShanghaiCard extends StatelessWidget {
@@ -53,15 +54,31 @@ class DisneyShanghaiCard extends StatelessWidget {
                   data: data,
                 )
               ]),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Text(
-              facility.name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  facility.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ),
+              IconButton(
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (c) => DetailPage(facility: facility),
+                  );
+                },
+                icon: Icon(
+                  Icons.open_in_browser,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           )
         ],
       ),

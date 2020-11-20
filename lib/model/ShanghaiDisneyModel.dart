@@ -1,4 +1,5 @@
 import 'package:dataset_web/objects/facility.dart';
+import 'package:dataset_web/objects/facilityDetail.dart';
 import 'package:dataset_web/utils/urls.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,21 @@ class ShanghaiDisneyModel with ChangeNotifier {
       notifyListeners();
     } catch (err) {
       isFetchingList = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<FacilityDetail> fetchDetail(String url) async {
+    try {
+      isFetchingDetail = true;
+      notifyListeners();
+      var resp = await dio.get(url);
+      isFetchingDetail = false;
+      notifyListeners();
+      return FacilityDetail.fromJson(resp.data);
+    } catch (err) {
+      isFetchingDetail = false;
       notifyListeners();
       rethrow;
     }

@@ -101,7 +101,7 @@ class SinaKeywordModel with ChangeNotifier {
   }
 
   Future<void> fetchMore() async {
-    var response = await dio.get("$kBaseURL$kSinaURL/");
+    var response = await dio.get(nextURL);
     nextURL = response.data['next'];
     var newWords = (response.data['results'] as List)
         .map((e) => Keyword.fromJson(e))
