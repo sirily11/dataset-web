@@ -88,7 +88,6 @@ class SinaKeywordModel with ChangeNotifier {
       isLoadingDetail = true;
       notifyListeners();
       var resp = await dio.get(url);
-      nextURL = resp.data['next'];
       var s = Keyword.fromJson(resp.data);
       keywordDetail = s;
       isLoadingDetail = false;
