@@ -1,5 +1,7 @@
 name: dataset_web
-description: A new Flutter project.
+description: A Dataset app.
+authors:
+  - "Qiwei Li"
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
