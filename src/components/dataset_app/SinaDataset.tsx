@@ -8,6 +8,8 @@ import {
 } from "./base_dataset_app";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import SinaList from "../sina/SinaList";
+import qs from "qs";
+import SearchItem from "../sina/SearchItem";
 
 export interface Post {
   id: number;
@@ -30,9 +32,7 @@ export interface SinaDatasetListProps
 export interface SinaDatasetDetailProps
   extends DatasetAppDetailProps<Keyword> {}
 
-export interface SinaDatasetAppContext extends DatasetAppContext {
-  keywords: Keyword[];
-  setKeywords(keywords: Keyword[]): void;
+export interface SinaDatasetAppContext extends DatasetAppContext<Keyword> {
   selectedIndex?: string;
   setSelectedIndex(index?: string): void;
   detail?: Keyword;
@@ -51,8 +51,8 @@ const SinaDatasetProvider = ({
   const [detail, setSelectedDetail] = React.useState<Keyword>();
 
   const value: SinaDatasetAppContext = {
-    keywords,
-    setKeywords,
+    items: keywords,
+    setItems: setKeywords,
     selectedIndex,
     setSelectedDetail,
     detail,
@@ -112,7 +112,19 @@ export class SinaDatasetApp extends DatasetApp<Keyword, Keyword> {
   renderDetail(): JSX.Element {
     throw new Error("Method not implemented.");
   }
-  search<T>(keyword: string): T[] | undefined {
-    throw new Error("Method not implemented.");
-  }
+  search = async (keyword: string): Promise<Keyword[] | undefined> => {
+    let q = qs.stringify({ search: keyword });
+    let url = `${this.getFetchListURL()}?${q}`;
+    try {
+      let data = await axios.get(url);
+      return data.data.results;
+    } catch (err) {
+      window.alert(err);
+    }
+    return [];
+  };
+
+  renderSearchItem = (item: Keyword) => {
+    return <SearchItem keyword={item} />;
+  };
 }

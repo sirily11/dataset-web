@@ -13,13 +13,16 @@ export interface DatasetAppDetailProps<D> {
   data: D;
 }
 
-export interface DatasetAppContext {}
+export interface DatasetAppContext<T> {
+  items: T[];
+  setItems(keywords: T[]): void;
+}
 
 export abstract class DatasetApp<T, D> {
   abstract isMatchPath(currentPath: string): boolean;
 
   nextURL?: string;
-  appContext?: React.Context<DatasetAppContext>;
+  appContext?: React.Context<DatasetAppContext<T>>;
 
   abstract getAppProvider({ children }: { children: any }): JSX.Element;
 
@@ -98,7 +101,7 @@ export abstract class DatasetApp<T, D> {
 
     try {
       let result = await axios.get(url);
-      this.nextURL = result.data.next;
+
       return result.data as D;
     } catch (err) {
       //   window.alert(err);
@@ -109,5 +112,7 @@ export abstract class DatasetApp<T, D> {
     return this.nextURL !== undefined;
   };
 
-  abstract search<T>(keyword: string): T[] | undefined;
+  abstract search(keyword: string): Promise<T[] | undefined>;
+
+  abstract renderSearchItem(item: T): JSX.Element;
 }

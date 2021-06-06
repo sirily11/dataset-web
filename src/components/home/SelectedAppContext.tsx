@@ -5,7 +5,11 @@ import { useLocation } from "react-router-dom";
 interface App {
   selectedApp?: DatasetApp<any, any>;
   isLoading: boolean;
+  anchorEl?: HTMLElement;
+  setAnchorEl(e?: HTMLElement): void;
   setIsLoading(v: boolean): void;
+  searchResults: any[];
+  setResults(a: any[]): void;
 }
 
 //@ts-ignore
@@ -22,7 +26,10 @@ export function DatasetAppProvider({
 
   const [selectedApp, setSelectedApp] =
     React.useState<DatasetApp<any, any> | undefined>(undefined);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
+
   const [isLoading, setIsLoading] = React.useState(false);
+  const [searchResults, setResults] = React.useState<any[]>([]);
 
   React.useEffect(() => {
     let foundApp = apps.find((a) => location.pathname.includes(a.getPath()));
@@ -31,7 +38,15 @@ export function DatasetAppProvider({
 
   return (
     <DatasetAppContext.Provider
-      value={{ selectedApp: selectedApp, isLoading, setIsLoading }}
+      value={{
+        selectedApp: selectedApp,
+        isLoading,
+        setIsLoading,
+        anchorEl,
+        setAnchorEl,
+        searchResults,
+        setResults,
+      }}
     >
       {children}
     </DatasetAppContext.Provider>

@@ -47,8 +47,8 @@ export default function SinaList(props: SinaDatasetListProps) {
 
   const { setIsLoading } = React.useContext(DatasetAppContext);
   const {
-    setKeywords,
-    keywords,
+    setItems,
+    items: keywords,
     setSelectedIndex,
     selectedIndex,
     detail,
@@ -60,7 +60,7 @@ export default function SinaList(props: SinaDatasetListProps) {
     fetchList()
       .then((v) => {
         if (v) {
-          setKeywords(v);
+          setItems(v);
         }
       })
       .finally(() => {
@@ -88,7 +88,7 @@ export default function SinaList(props: SinaDatasetListProps) {
     setIsLoading(false);
     if (n) {
       let newKeywords = keywords.concat(n);
-      setKeywords(newKeywords);
+      setItems(newKeywords);
     }
   }, [keywords]);
 
