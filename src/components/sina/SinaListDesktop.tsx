@@ -71,6 +71,7 @@ export default function SinaListDesktop(props: SinaDatasetListProps) {
     setSelectedIndex(params.id ? params.id : undefined);
     if (params.id) {
       setIsLoading(true);
+      setSelectedDetail(undefined);
       fetchDetail(params.id)
         .then((d) => {
           setSelectedDetail(d);
