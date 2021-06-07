@@ -2,6 +2,7 @@ import {
   createMuiTheme,
   createStyles,
   CssBaseline,
+  Hidden,
   makeStyles,
   Theme,
   ThemeProvider,
@@ -18,6 +19,7 @@ import lightBlue from "@material-ui/core/colors/lightBlue";
 import { DatasetAppProvider } from "./SelectedAppContext";
 import AppAppBar from "./AppAppBar";
 import AppBackdrop from "./AppBackdrop";
+import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
 
 interface Props {
   apps: DatasetApp<any, any>[];
@@ -26,10 +28,13 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     content: {
-      marginLeft: config.drawerWidth,
+      [theme.breakpoints.up("md")]: {
+        marginLeft: config.drawerWidth,
+        padding: theme.spacing(3),
+      },
       marginTop: 50,
       flexGrow: 1,
-      padding: theme.spacing(3),
+
       overflowY: "hidden",
     },
     toolbar: theme.mixins.toolbar,
@@ -42,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: "dark",
+    type: "light",
     primary: lightBlue,
   },
 });
@@ -50,24 +55,48 @@ const darkTheme = createMuiTheme({
 export default function AppView(props: Props) {
   const { apps } = props;
   const classes = useStyles();
+  const desktopBreakpoints: Breakpoint[] = ["xs", "sm"];
+  const mobileBreakpoints: Breakpoint[] = ["md", "lg", "xl"];
 
   return (
     <div style={{ overflowY: "hidden" }}>
       <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
         <Router>
           <DatasetAppProvider apps={apps}>
             <div>
-              <CssBaseline />
               <AppAppBar />
               <AppBackdrop />
-              <LeftDrawer apps={apps} />
+              <Hidden only={desktopBreakpoints} implementation="css">
+                <LeftDrawer apps={apps} />
+              </Hidden>
+
               <div className={classes.content}>
                 <Switch>
-                  {apps.map((a, i) => (
-                    <Route path={a.getDetailPath()} key={`path-${i}`} exact>
-                      {a.getAppProvider({ children: a.renderLists() })}
-                    </Route>
-                  ))}
+                  {apps.map((a, i) =>
+                    a.getAppProvider({
+                      children: (
+                        <div key={`path-${i}`}>
+                          <Hidden
+                            only={desktopBreakpoints}
+                            implementation="css"
+                          >
+                            <Route path={a.getDetailPath().desktop} exact>
+                              {a.renderLists()}
+                            </Route>
+                          </Hidden>
+                          <Hidden only={mobileBreakpoints} implementation="css">
+                            <Route path={a.getPath()} exact>
+                              {a.renderMobileLists()}
+                            </Route>
+                            <Route path={a.getDetailPath().mobile} exact>
+                              {a.renderMobileDetail()}
+                            </Route>
+                          </Hidden>
+                        </div>
+                      ),
+                    })
+                  )}
                 </Switch>
               </div>
             </div>

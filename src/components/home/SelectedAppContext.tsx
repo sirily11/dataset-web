@@ -1,6 +1,7 @@
 import React from "react";
 import { DatasetApp } from "../dataset_app/base_dataset_app";
 import { useLocation } from "react-router-dom";
+import { matchPath } from "react-router";
 
 interface App {
   selectedApp?: DatasetApp<any, any>;
@@ -32,7 +33,14 @@ export function DatasetAppProvider({
   const [searchResults, setResults] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    let foundApp = apps.find((a) => location.pathname.includes(a.getPath()));
+    let foundApp = apps.find((a) => {
+      const match = matchPath(location.pathname, {
+        path: a.getDetailPath().desktop,
+        exact: true,
+      });
+
+      return match !== null;
+    });
     setSelectedApp(foundApp);
   }, [location]);
 

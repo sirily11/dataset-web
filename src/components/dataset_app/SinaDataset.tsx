@@ -5,11 +5,15 @@ import {
   DatasetAppContext,
   DatasetAppDetailProps,
   DatasetAppListProps,
+  DatasetAppMobileDetailProps,
+  ResponsivePath,
 } from "./base_dataset_app";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import SinaList from "../sina/SinaList";
+import SinaListDesktop from "../sina/SinaListDesktop";
 import qs from "qs";
 import SearchItem from "../sina/SearchItem";
+import SinaListMobile from "../sina/SinaListMobile";
+import SinaDetailsMobile from "../sina/SinaDetailsMobile";
 
 export interface Post {
   id: number;
@@ -31,6 +35,9 @@ export interface SinaDatasetListProps
 
 export interface SinaDatasetDetailProps
   extends DatasetAppDetailProps<Keyword> {}
+
+export interface SinaDatasetMobileDetailProps
+  extends DatasetAppMobileDetailProps<Keyword> {}
 
 export interface SinaDatasetAppContext extends DatasetAppContext<Keyword> {
   selectedIndex?: string;
@@ -85,8 +92,11 @@ export class SinaDatasetApp extends DatasetApp<Keyword, Keyword> {
   getPath(): string {
     return "/sina";
   }
-  getDetailPath(): string {
-    return "/sina/:id?";
+  getDetailPath(): ResponsivePath {
+    return {
+      desktop: "/sina/:id?",
+      mobile: "/sina/:id",
+    };
   }
   getFetchListURL(params?: { [keyword: string]: string }): string {
     return "https://z6msxm2nwd.execute-api.ap-southeast-1.amazonaws.com/dev/api/sina/keyword/";
@@ -99,7 +109,7 @@ export class SinaDatasetApp extends DatasetApp<Keyword, Keyword> {
   }
   renderLists(): JSX.Element {
     return (
-      <SinaList
+      <SinaListDesktop
         fetchList={this.fetchList}
         fetchNext={this.fetchNext}
         hasNext={this.hasNext}
@@ -109,9 +119,24 @@ export class SinaDatasetApp extends DatasetApp<Keyword, Keyword> {
       />
     );
   }
-  renderDetail(): JSX.Element {
-    throw new Error("Method not implemented.");
-  }
+
+  renderMobileLists = (): JSX.Element => {
+    return (
+      <SinaListMobile
+        fetchList={this.fetchList}
+        fetchNext={this.fetchNext}
+        hasNext={this.hasNext}
+        fetchDetail={this.fetchDetail}
+        //@ts-ignore
+        appContext={this.appContext!}
+      />
+    );
+  };
+
+  renderMobileDetail = (): JSX.Element => {
+    return <SinaDetailsMobile fetchDetail={this.fetchDetail} />;
+  };
+
   search = async (keyword: string): Promise<Keyword[] | undefined> => {
     let q = qs.stringify({ search: keyword });
     let url = `${this.getFetchListURL()}?${q}`;

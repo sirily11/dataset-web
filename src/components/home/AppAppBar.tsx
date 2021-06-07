@@ -1,6 +1,7 @@
 import {
   ClickAwayListener,
   createStyles,
+  IconButton,
   InputBase,
   List,
   makeStyles,
@@ -15,12 +16,17 @@ import { config } from "../../config/config";
 import { DatasetAppContext } from "./SelectedAppContext";
 import SearchIcon from "@material-ui/icons/Search";
 import { DatasetApp } from "../dataset_app/base_dataset_app";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import { useLocation, useHistory } from "react-router-dom";
+import { matchPath } from "react-router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
-      width: `calc(100% - ${config.drawerWidth}px)`,
-      marginLeft: config.drawerWidth,
+      [theme.breakpoints.up("md")]: {
+        width: `calc(100% - ${config.drawerWidth}px)`,
+        marginLeft: config.drawerWidth,
+      },
     },
 
     title: {
@@ -58,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
       transition: theme.transitions.create("width"),
       width: "100%",
@@ -84,9 +89,38 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function AppAppBar() {
   const classes = useStyles();
+  const location = useLocation();
+  const history = useHistory();
 
   const { selectedApp, anchorEl, searchResults, setResults } =
     React.useContext(DatasetAppContext);
+
+  const [showBackBtn, setShowBackBtn] = React.useState(true);
+
+  const showButton = () => {
+    let path = location.pathname;
+    if (selectedApp !== undefined) {
+      let match =
+        matchPath(selectedApp.getPath(), {
+          path: path,
+          exact: true,
+        }) === null;
+
+      if (match) {
+        setShowBackBtn(true);
+      } else {
+        setShowBackBtn(false);
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    showButton();
+  }, []);
+
+  React.useEffect(() => {
+    showButton();
+  }, [location]);
 
   return (
     <div>
@@ -107,6 +141,17 @@ export default function AppAppBar() {
       </Popper>
       <AppBar className={classes.appBar}>
         <Toolbar>
+          {showBackBtn && (
+            <IconButton
+              onClick={() => {
+                if (selectedApp) {
+                  history.push(selectedApp.getPath());
+                }
+              }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+          )}
           <Typography className={classes.title} variant="h6" noWrap>
             {selectedApp?.getTitle() ?? "Dataset App"}
           </Typography>

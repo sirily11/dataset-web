@@ -5,6 +5,7 @@ import { createStyles, Drawer, makeStyles, Theme } from "@material-ui/core";
 import { config } from "../../config/config";
 import { List, ListItem, ListItemIcon, Tooltip } from "@material-ui/core";
 import { DatasetAppContext } from "./SelectedAppContext";
+import { matchPath } from "react-router";
 
 interface Props {
   apps: DatasetApp<any, any>[];

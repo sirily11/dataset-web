@@ -15,9 +15,8 @@ import {
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import moment from "moment";
-import qs from "qs";
 import { DatasetAppContext } from "../home/SelectedAppContext";
-import SinaDetails from "./SinaDetails";
+import SinaDetailsDesktop from "./SinaDetailsDesktop";
 
 interface RowProps {
   keyword?: Keyword;
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function SinaList(props: SinaDatasetListProps) {
+export default function SinaListDesktop(props: SinaDatasetListProps) {
   const { fetchList, fetchNext, hasNext, fetchDetail, appContext } = props;
 
   const classes = useStyles();
@@ -79,6 +78,8 @@ export default function SinaList(props: SinaDatasetListProps) {
         .finally(() => {
           setIsLoading(false);
         });
+    } else {
+      setSelectedDetail(undefined);
     }
   }, [location]);
 
@@ -103,7 +104,7 @@ export default function SinaList(props: SinaDatasetListProps) {
 
   return (
     <Grid container className={classes.container} spacing={2}>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <Card className={classes.card} variant="outlined">
           {/* <CardHeader title="Keywords" /> */}
           <AutoSizer>
@@ -115,7 +116,7 @@ export default function SinaList(props: SinaDatasetListProps) {
                 itemSize={70}
               >
                 {({ index, style }) => (
-                  <ItemRow
+                  <ListItemRow
                     selectedIndex={selectedIndex}
                     selectKeyword={selectKeyword}
                     keyword={
@@ -132,15 +133,15 @@ export default function SinaList(props: SinaDatasetListProps) {
         </Card>
       </Grid>
       <Fade in={detail !== undefined} mountOnEnter unmountOnExit>
-        <Grid item xs={8}>
-          <SinaDetails data={detail!} />
+        <Grid item xs={12} md={8}>
+          {detail && <SinaDetailsDesktop data={detail} />}
         </Grid>
       </Fade>
     </Grid>
   );
 }
 
-function ItemRow(props: RowProps) {
+export function ListItemRow(props: RowProps) {
   const { keyword, style, loadMore, selectKeyword, selectedIndex, index } =
     props;
 

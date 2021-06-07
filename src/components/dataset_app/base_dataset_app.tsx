@@ -13,9 +13,18 @@ export interface DatasetAppDetailProps<D> {
   data: D;
 }
 
+export interface DatasetAppMobileDetailProps<D> {
+  fetchDetail(identifier: any): Promise<D | undefined>;
+}
+
 export interface DatasetAppContext<T> {
   items: T[];
   setItems(keywords: T[]): void;
+}
+
+export interface ResponsivePath {
+  mobile: string;
+  desktop: string;
 }
 
 export abstract class DatasetApp<T, D> {
@@ -33,7 +42,7 @@ export abstract class DatasetApp<T, D> {
   /**
    * Get detail's path
    */
-  abstract getDetailPath(): string;
+  abstract getDetailPath(): ResponsivePath;
   /**
    * Get app's title
    */
@@ -50,13 +59,19 @@ export abstract class DatasetApp<T, D> {
   abstract getIcon(): JSX.Element;
 
   /**
-   * Render list's page
+   * Render desktop list's page
    */
   abstract renderLists(): JSX.Element;
+
   /**
-   * Render detail's page
+   * Render mobile list page
    */
-  abstract renderDetail(): JSX.Element;
+  abstract renderMobileLists(): JSX.Element;
+
+  /**
+   * Render Mobile Version Details
+   */
+  abstract renderMobileDetail(): JSX.Element;
 
   /**
    * Fetch list's info
