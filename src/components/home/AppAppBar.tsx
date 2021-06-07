@@ -113,6 +113,9 @@ export default function AppAppBar() {
         setShowBackBtn(false);
       }
     }
+    if (path === "/") {
+      setShowBackBtn(false);
+    }
   };
 
   React.useEffect(() => {

@@ -21,6 +21,8 @@ import { DetailItem } from "./SinaDetailsDesktop";
 import { DatasetAppContext } from "../home/SelectedAppContext";
 import { useLocation, useParams } from "react-router";
 import Skeleton from "@material-ui/lab/Skeleton";
+//@ts-ignore
+import MetaTags from "react-meta-tags";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,6 +61,9 @@ export default function SinaDetailsMobile(props: SinaDatasetMobileDetailProps) {
 
   return data !== undefined ? (
     <div className={classes.card}>
+      <MetaTags>
+        <title>{data.keyword}</title>
+      </MetaTags>
       <CardHeader
         title={data.keyword}
         subheader={`Count: ${data.numbers}      |     Rank: ${data.rank}`}

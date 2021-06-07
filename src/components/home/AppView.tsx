@@ -79,6 +79,7 @@ export default function AppView(props: Props) {
                         children: (
                           <div key={`path-${i}`}>
                             <AppAppBar />
+
                             <Hidden
                               only={desktopBreakpoints}
                               implementation="css"

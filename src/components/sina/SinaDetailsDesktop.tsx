@@ -15,6 +15,8 @@ import React from "react";
 import { Post, SinaDatasetDetailProps } from "../dataset_app/SinaDataset";
 import DynamicList, { createCache } from "react-window-dynamic-list";
 import AutoSizer from "react-virtualized-auto-sizer";
+//@ts-ignore
+import MetaTags from "react-meta-tags";
 
 React.useLayoutEffect = React.useEffect;
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,6 +39,9 @@ export default function SinaDetailsDesktop(props: SinaDatasetDetailProps) {
 
   return (
     <Card variant="outlined" className={classes.card}>
+      <MetaTags>
+        <title>{data.keyword}</title>
+      </MetaTags>
       <CardHeader
         title={data.keyword}
         subheader={`Count: ${data.numbers}      |     Rank: ${data.rank}`}
@@ -73,7 +78,9 @@ export function DetailItem(props: { item?: Post; index: number; style: any }) {
       {/* <ListItemAvatar>
           <div>{index + 1}</div>
         </ListItemAvatar> */}
-      <Typography variant="body2">{index + 1}</Typography>
+      <Typography style={{ marginLeft: 10 }} variant="body2">
+        {index + 1}
+      </Typography>
       <Typography variant="body1" style={{ margin: 20 }}>
         {item?.content
           .replace("收起全文d", "")
