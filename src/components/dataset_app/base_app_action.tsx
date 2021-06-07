@@ -4,6 +4,7 @@ import {
   Menu,
   MenuItem,
   Popper,
+  Tooltip,
 } from "@material-ui/core";
 import React from "react";
 import { ContextMenuContext } from "../context_menu/ContextMenuContext";
@@ -48,14 +49,15 @@ export abstract class DatasetAppAction<T, D, C> {
         <ContextMenuContext.Consumer>
           {({ openMenu, closeMenu, menuAnchor }) => (
             <div>
-              <IconButton
-                onClick={(e) => {
-                  openMenu(e.currentTarget);
-                }}
-              >
-                {this.renderActionIcon()}
-              </IconButton>
-
+              <Tooltip title={this.getTitle()}>
+                <IconButton
+                  onClick={(e) => {
+                    openMenu(e.currentTarget);
+                  }}
+                >
+                  {this.renderActionIcon()}
+                </IconButton>
+              </Tooltip>
               <Menu
                 anchorEl={menuAnchor}
                 open={menuAnchor !== undefined}
