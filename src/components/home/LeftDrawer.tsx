@@ -8,7 +8,7 @@ import { DatasetAppContext } from "./SelectedAppContext";
 import { matchPath } from "react-router";
 
 interface Props {
-  apps: DatasetApp<any, any>[];
+  apps: DatasetApp<any, any, any>[];
 }
 
 const useStyles = makeStyles((theme: Theme) =>

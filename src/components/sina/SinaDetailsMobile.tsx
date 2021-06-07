@@ -67,7 +67,7 @@ export default function SinaDetailsMobile(props: SinaDatasetMobileDetailProps) {
         <AutoSizer>
           {({ height, width }) => (
             <DynamicList
-              height={height}
+              height={height - 75}
               width={width}
               cache={cache}
               data={data.posts ?? []}

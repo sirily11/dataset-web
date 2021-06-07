@@ -1,6 +1,7 @@
 import {
   ClickAwayListener,
   createStyles,
+  Hidden,
   IconButton,
   InputBase,
   List,
@@ -155,6 +156,8 @@ export default function AppAppBar() {
           <Typography className={classes.title} variant="h6" noWrap>
             {selectedApp?.getTitle() ?? "Dataset App"}
           </Typography>
+          {selectedApp && <Hidden smDown>{selectedApp.renderActions()}</Hidden>}
+
           {selectedApp && <SearchBar />}
         </Toolbar>
       </AppBar>

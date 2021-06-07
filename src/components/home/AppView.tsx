@@ -20,9 +20,10 @@ import { DatasetAppProvider } from "./SelectedAppContext";
 import AppAppBar from "./AppAppBar";
 import AppBackdrop from "./AppBackdrop";
 import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
+import ContextMenuProvider from "../context_menu/ContextMenuContext";
 
 interface Props {
-  apps: DatasetApp<any, any>[];
+  apps: DatasetApp<any, any, any>[];
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,49 +61,54 @@ export default function AppView(props: Props) {
 
   return (
     <div style={{ overflowY: "hidden" }}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <Router>
-          <DatasetAppProvider apps={apps}>
-            <div>
-              <AppAppBar />
-              <AppBackdrop />
-              <Hidden only={desktopBreakpoints} implementation="css">
-                <LeftDrawer apps={apps} />
-              </Hidden>
+      <ContextMenuProvider>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <Router>
+            <DatasetAppProvider apps={apps}>
+              <div style={{ overflowY: "hidden" }}>
+                <AppBackdrop />
+                <Hidden only={desktopBreakpoints} implementation="css">
+                  <LeftDrawer apps={apps} />
+                </Hidden>
 
-              <div className={classes.content}>
-                <Switch>
-                  {apps.map((a, i) =>
-                    a.getAppProvider({
-                      children: (
-                        <div key={`path-${i}`}>
-                          <Hidden
-                            only={desktopBreakpoints}
-                            implementation="css"
-                          >
-                            <Route path={a.getDetailPath().desktop} exact>
-                              {a.renderLists()}
-                            </Route>
-                          </Hidden>
-                          <Hidden only={mobileBreakpoints} implementation="css">
-                            <Route path={a.getPath()} exact>
-                              {a.renderMobileLists()}
-                            </Route>
-                            <Route path={a.getDetailPath().mobile} exact>
-                              {a.renderMobileDetail()}
-                            </Route>
-                          </Hidden>
-                        </div>
-                      ),
-                    })
-                  )}
-                </Switch>
+                <div className={classes.content}>
+                  <Switch>
+                    {apps.map((a, i) =>
+                      a.getAppProvider({
+                        children: (
+                          <div key={`path-${i}`}>
+                            <AppAppBar />
+                            <Hidden
+                              only={desktopBreakpoints}
+                              implementation="css"
+                            >
+                              <Route path={a.getDetailPath().desktop} exact>
+                                {a.renderLists()}
+                              </Route>
+                            </Hidden>
+                            <Hidden
+                              only={mobileBreakpoints}
+                              implementation="css"
+                            >
+                              <Route path={a.getPath()} exact>
+                                {a.renderMobileLists()}
+                              </Route>
+                              <Route path={a.getDetailPath().mobile} exact>
+                                {a.renderMobileDetail()}
+                              </Route>
+                            </Hidden>
+                          </div>
+                        ),
+                      })
+                    )}
+                  </Switch>
+                </div>
               </div>
-            </div>
-          </DatasetAppProvider>
-        </Router>
-      </ThemeProvider>
+            </DatasetAppProvider>
+          </Router>
+        </ThemeProvider>
+      </ContextMenuProvider>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { matchPath } from "react-router";
 
 interface App {
-  selectedApp?: DatasetApp<any, any>;
+  selectedApp?: DatasetApp<any, any, any>;
   isLoading: boolean;
   anchorEl?: HTMLElement;
   setAnchorEl(e?: HTMLElement): void;
@@ -21,12 +21,12 @@ export function DatasetAppProvider({
   apps,
 }: {
   children: any;
-  apps: DatasetApp<any, any>[];
+  apps: DatasetApp<any, any, any>[];
 }) {
   const location = useLocation();
 
   const [selectedApp, setSelectedApp] =
-    React.useState<DatasetApp<any, any> | undefined>(undefined);
+    React.useState<DatasetApp<any, any, any> | undefined>(undefined);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
 
   const [isLoading, setIsLoading] = React.useState(false);

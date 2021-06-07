@@ -14,6 +14,8 @@ import qs from "qs";
 import SearchItem from "../sina/SearchItem";
 import SinaListMobile from "../sina/SinaListMobile";
 import SinaDetailsMobile from "../sina/SinaDetailsMobile";
+import { SinaDatePickerAction } from "./actions/SinaDetaPickerAction";
+import { DatasetAppAction } from "./base_app_action";
 
 export interface Post {
   id: number;
@@ -44,6 +46,8 @@ export interface SinaDatasetAppContext extends DatasetAppContext<Keyword> {
   setSelectedIndex(index?: string): void;
   detail?: Keyword;
   setSelectedDetail(detail?: Keyword): void;
+  setOpenDatePicker(b: boolean): void;
+  openDatePicker: boolean;
 }
 
 const SinaDatasetProvider = ({
@@ -56,6 +60,7 @@ const SinaDatasetProvider = ({
   const [keywords, setKeywords] = React.useState<Keyword[]>([]);
   const [selectedIndex, setSelectedIndex] = React.useState<string>();
   const [detail, setSelectedDetail] = React.useState<Keyword>();
+  const [openDatePicker, setOpenDatePicker] = React.useState(false);
 
   const value: SinaDatasetAppContext = {
     items: keywords,
@@ -64,12 +69,18 @@ const SinaDatasetProvider = ({
     setSelectedDetail,
     detail,
     setSelectedIndex,
+    openDatePicker,
+    setOpenDatePicker,
   };
 
   return <context.Provider value={value}>{children}</context.Provider>;
 };
 
-export class SinaDatasetApp extends DatasetApp<Keyword, Keyword> {
+export class SinaDatasetApp extends DatasetApp<
+  Keyword,
+  Keyword,
+  SinaDatasetAppContext
+> {
   constructor() {
     super();
     //@ts-ignore
@@ -99,10 +110,17 @@ export class SinaDatasetApp extends DatasetApp<Keyword, Keyword> {
     };
   }
   getFetchListURL(params?: { [keyword: string]: string }): string {
-    return "https://z6msxm2nwd.execute-api.ap-southeast-1.amazonaws.com/dev/api/sina/keyword/";
+    let baseURL =
+      "https://z6msxm2nwd.execute-api.ap-southeast-1.amazonaws.com/dev/api/sina/keyword";
+    if (params) {
+      let qss = qs.stringify(params);
+      return `${baseURL}?${qss}`;
+    }
+
+    return baseURL;
   }
   getFetchDetailURL(id: any, params?: { [keyword: string]: string }): string {
-    return this.getFetchListURL() + id + "/";
+    return this.getFetchListURL() + "/" + id + "/";
   }
   getTitle(): string {
     return "Sina Keyword";
@@ -151,5 +169,38 @@ export class SinaDatasetApp extends DatasetApp<Keyword, Keyword> {
 
   renderSearchItem = (item: Keyword) => {
     return <SearchItem keyword={item} />;
+  };
+
+  createActions = () => {
+    const datePicker = new SinaDatePickerAction();
+    return [datePicker];
+  };
+
+  renderActions = () => {
+    let actions = this.createActions();
+    let context = this.appContext!;
+
+    return (
+      <div>
+        <context.Consumer>
+          {(context) => (
+            <div>
+              {actions.map((a) =>
+                a.render(
+                  {
+                    fetchList: this.fetchList,
+                    fetchDetail: this.fetchDetail,
+                    fetchNext: this.fetchNext,
+                    //@ts-ignore
+                    appContext: this.appContext!,
+                  },
+                  context
+                )
+              )}
+            </div>
+          )}
+        </context.Consumer>
+      </div>
+    );
   };
 }

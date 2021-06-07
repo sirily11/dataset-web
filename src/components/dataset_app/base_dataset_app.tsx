@@ -1,8 +1,9 @@
 import axios from "axios";
 import React from "react";
+import { DatasetAppAction } from "./base_app_action";
 
 export interface DatasetAppListProps<T, D, C> {
-  fetchList(): Promise<T[] | undefined>;
+  fetchList(params?: { [keyword: string]: string }): Promise<T[] | undefined>;
   fetchNext(): Promise<T[] | undefined>;
   hasNext(): boolean;
   fetchDetail(identifier: any): Promise<D | undefined>;
@@ -27,7 +28,7 @@ export interface ResponsivePath {
   desktop: string;
 }
 
-export abstract class DatasetApp<T, D> {
+export abstract class DatasetApp<T, D, C extends DatasetAppContext<T>> {
   abstract isMatchPath(currentPath: string): boolean;
 
   nextURL?: string;
@@ -54,8 +55,14 @@ export abstract class DatasetApp<T, D> {
     params?: { [keyword: string]: string }
   ): string;
 
+  /**
+   * Get App Title
+   */
   abstract getTitle(): string;
 
+  /**
+   * Get App Icon
+   */
   abstract getIcon(): JSX.Element;
 
   /**
@@ -74,14 +81,27 @@ export abstract class DatasetApp<T, D> {
   abstract renderMobileDetail(): JSX.Element;
 
   /**
+   * Create list of actions
+   */
+  abstract createActions(): DatasetAppAction<T, D, C>[];
+
+  /**
+   * Render Actions
+   */
+  abstract renderActions(): JSX.Element;
+
+  /**
    * Fetch list's info
    */
-  fetchList = async (): Promise<T[] | undefined> => {
-    let url = this.getFetchListURL();
+  fetchList = async (params?: {
+    [keyword: string]: string;
+  }): Promise<T[] | undefined> => {
+    let url = this.getFetchListURL(params);
     if (url === undefined) {
       return undefined;
     }
     try {
+      console.log(url);
       let result = await axios.get(url);
       this.nextURL = result.data.next;
       return result.data.results;

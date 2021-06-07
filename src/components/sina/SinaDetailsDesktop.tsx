@@ -9,12 +9,14 @@ import {
   ListItemText,
   makeStyles,
   Theme,
+  Typography,
 } from "@material-ui/core";
 import React from "react";
 import { Post, SinaDatasetDetailProps } from "../dataset_app/SinaDataset";
 import DynamicList, { createCache } from "react-window-dynamic-list";
 import AutoSizer from "react-virtualized-auto-sizer";
 
+React.useLayoutEffect = React.useEffect;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
@@ -43,7 +45,7 @@ export default function SinaDetailsDesktop(props: SinaDatasetDetailProps) {
         <AutoSizer>
           {({ height, width }) => (
             <DynamicList
-              height={height}
+              height={height - 65}
               width={width}
               cache={cache}
               data={data.posts ?? []}
@@ -68,18 +70,19 @@ export function DetailItem(props: { item?: Post; index: number; style: any }) {
 
   return (
     <div key={`post-${index}`} style={style}>
-      <ListItem button>
-        <ListItemAvatar>
+      {/* <ListItemAvatar>
           <div>{index + 1}</div>
-        </ListItemAvatar>
-        <ListItemText
-          primary={item?.content
-            .replace("收起全文d", "")
-            .replace("展开全文c", "……")
-            .replace("L", "")
-            .replace("", "")}
-        />
-      </ListItem>
+        </ListItemAvatar> */}
+      <Typography variant="body2">{index + 1}</Typography>
+      <Typography variant="body1" style={{ margin: 20 }}>
+        {item?.content
+          .replace("收起全文d", "")
+          .replace("展开全文c", "……")
+          .replace("L", "")
+          .replace("O网页链接", "[网页链接]")
+          .replace("", "")}
+      </Typography>
+
       <Divider />
     </div>
   );
